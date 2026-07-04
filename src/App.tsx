@@ -260,7 +260,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white mb-4 shadow-lg shadow-blue-500/20">
             <Users size={32} />
           </div>
-          <h1 className={cn("text-3xl font-black tracking-tight mb-2", darkMode ? "text-white" : "text-slate-900")}>
+          <h1 className={cn("text-3xl font-extrabold tracking-tight mb-2", darkMode ? "text-white" : "text-slate-900")}>
             {isLogin ? "KHAN DENTAL" : "Create Account"}
           </h1>
           <p className={cn("text-sm font-medium", darkMode ? "text-slate-400" : "text-slate-500")}>
@@ -481,7 +481,7 @@ const StatCard = ({ label, value, icon: Icon, color, darkMode, glowClass, onClic
     <div className="flex items-start justify-between relative z-10">
       <div className="min-w-0 flex-1">
         <p className={cn("text-[10px] md:text-xs font-bold tracking-wide mb-1 md:mb-2 opacity-60 truncate", darkMode ? "text-slate-300" : "text-slate-500")}>{label}</p>
-        <h3 className={cn("text-xl md:text-3xl font-black tracking-tight truncate", darkMode ? "text-white" : "text-slate-900")}>{value}</h3>
+        <h3 className={cn("text-xl md:text-3xl font-extrabold tracking-tight truncate", darkMode ? "text-white" : "text-slate-900")}>{value}</h3>
       </div>
       <div className={cn(
         "p-2.5 md:p-3.5 rounded-xl md:rounded-2xl shadow-inner transition-transform duration-500 group-hover:rotate-12 flex-shrink-0 ml-2",
@@ -1453,7 +1453,7 @@ function AnalyticsView({ transactions, patients, darkMode }: { transactions: Tra
   return (
     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div>
-        <h2 className={cn("text-2xl md:text-3xl font-black tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Analytics & Insights</h2>
+        <h2 className={cn("text-2xl md:text-3xl font-extrabold tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Analytics & Insights</h2>
         <p className={cn("mt-1 font-medium text-sm md:text-base", darkMode ? "text-slate-400" : "text-slate-500")}>Financial performance and service trends</p>
       </div>
 
@@ -1627,7 +1627,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className={cn("text-2xl md:text-3xl font-black tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Stock & Inventory</h2>
+          <h2 className={cn("text-2xl md:text-3xl font-extrabold tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Stock & Inventory</h2>
           <p className={cn("mt-1 font-medium text-sm md:text-base", darkMode ? "text-slate-400" : "text-slate-500")}>Track your dental supplies</p>
         </div>
         <button
@@ -1681,7 +1681,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
             </div>
             <div className="flex items-end justify-between">
               <div>
-                <p className={cn("text-3xl font-black", darkMode ? "text-white" : "text-slate-900")}>
+                <p className={cn("text-3xl font-extrabold", darkMode ? "text-white" : "text-slate-900")}>
                   {item.quantity} <span className={cn("text-sm font-medium", darkMode ? "text-slate-500" : "text-slate-400")}>{item.unit}</span>
                 </p>
                 {typeof item.purchasePrice === 'number' && item.purchasePrice > 0 && (
@@ -1861,7 +1861,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                   darkMode ? "bg-white/5 text-slate-300 border border-white/10" : "bg-slate-50 text-slate-700"
                 )}>
                   <span>Total purchase cost:</span>
-                  <span className="font-black">{formatCurrency(newItem.purchasePrice * newItem.quantity)}</span>
+                  <span className="font-extrabold">{formatCurrency(newItem.purchasePrice * newItem.quantity)}</span>
                 </div>
               )}
             </div>
@@ -2062,7 +2062,7 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className={cn("text-2xl md:text-3xl font-black tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Appointment Calendar</h2>
+          <h2 className={cn("text-2xl md:text-3xl font-extrabold tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Appointment Calendar</h2>
           <p className={cn("mt-1 font-medium text-sm md:text-base", darkMode ? "text-slate-400" : "text-slate-500")}>Manage upcoming patient visits</p>
         </div>
         <button
@@ -2412,7 +2412,7 @@ function PrescriptionsView({ patients, prescriptions, doctorProfile, user, darkM
     <div className="max-w-6xl mx-auto space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h2 className={cn("text-2xl md:text-4xl font-black tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Prescriptions</h2>
+          <h2 className={cn("text-2xl md:text-4xl font-extrabold tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Prescriptions</h2>
           <p className={cn("mt-1 font-medium text-sm md:text-lg", darkMode ? "text-slate-400" : "text-slate-500")}>Write and manage patient prescriptions</p>
         </div>
         <button
@@ -2784,7 +2784,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <h2 className={cn("text-2xl md:text-4xl font-black tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Doctor Profile</h2>
+          <h2 className={cn("text-2xl md:text-4xl font-extrabold tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Doctor Profile</h2>
           <p className={cn("mt-1 font-medium text-sm md:text-lg", darkMode ? "text-slate-400" : "text-slate-500")}>Manage your professional identity and account security</p>
         </div>
         <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
@@ -3087,7 +3087,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white mb-4 shadow-lg shadow-blue-500/20">
                 <ShieldCheck size={32} />
               </div>
-              <h3 className={cn("text-2xl font-black tracking-tight mb-2", darkMode ? "text-white" : "text-slate-900")}>Confirm Identity</h3>
+              <h3 className={cn("text-2xl font-extrabold tracking-tight mb-2", darkMode ? "text-white" : "text-slate-900")}>Confirm Identity</h3>
               <p className={cn("text-sm font-medium", darkMode ? "text-slate-400" : "text-slate-500")}>Please enter your current password to proceed with this sensitive action</p>
             </div>
 
@@ -3214,7 +3214,7 @@ function SheetsView({ transactions, darkMode }: { transactions: Transaction[], d
     <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className={cn("text-2xl md:text-3xl font-black tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Financial Sheets</h2>
+          <h2 className={cn("text-2xl md:text-3xl font-extrabold tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Financial Sheets</h2>
           <p className={cn("mt-1 font-medium text-sm md:text-base", darkMode ? "text-slate-400" : "text-slate-500")}>Detailed cash flow and activity tracking</p>
         </div>
         <div className="flex items-center gap-2 md:gap-4 flex-wrap">
@@ -3252,21 +3252,21 @@ function SheetsView({ transactions, darkMode }: { transactions: Transaction[], d
           darkMode ? "bg-green-500/10 border-green-500/20" : "bg-emerald-50 border-emerald-100"
         )}>
           <p className={cn("text-xs md:text-sm font-bold mb-1", darkMode ? "text-green-400" : "text-emerald-600")}>Monthly Income</p>
-          <h3 className={cn("text-xl md:text-2xl font-black", darkMode ? "text-white" : "text-emerald-700")}>{formatCurrency(totals.income)}</h3>
+          <h3 className={cn("text-xl md:text-2xl font-extrabold", darkMode ? "text-white" : "text-emerald-700")}>{formatCurrency(totals.income)}</h3>
         </div>
         <div className={cn(
           "p-4 md:p-6 rounded-2xl md:rounded-3xl border transition-[transform,colors,opacity]",
           darkMode ? "bg-red-500/10 border-red-500/20" : "bg-red-50 border-red-100"
         )}>
           <p className={cn("text-xs md:text-sm font-bold mb-1", darkMode ? "text-red-400" : "text-red-600")}>Monthly Expenses</p>
-          <h3 className={cn("text-xl md:text-2xl font-black", darkMode ? "text-white" : "text-red-700")}>{formatCurrency(totals.expense)}</h3>
+          <h3 className={cn("text-xl md:text-2xl font-extrabold", darkMode ? "text-white" : "text-red-700")}>{formatCurrency(totals.expense)}</h3>
         </div>
         <div className={cn(
           "p-4 md:p-6 rounded-2xl md:rounded-3xl border transition-[transform,colors,opacity]",
           darkMode ? "bg-blue-500/10 border-blue-500/20" : "bg-blue-50 border-blue-100"
         )}>
           <p className={cn("text-xs md:text-sm font-bold mb-1", darkMode ? "text-blue-400" : "text-blue-600")}>Net Balance</p>
-          <h3 className={cn("text-xl md:text-2xl font-black", darkMode ? "text-white" : "text-blue-700")}>{formatCurrency(totals.balance)}</h3>
+          <h3 className={cn("text-xl md:text-2xl font-extrabold", darkMode ? "text-white" : "text-blue-700")}>{formatCurrency(totals.balance)}</h3>
         </div>
       </div>
 
@@ -3312,7 +3312,7 @@ function SheetsView({ transactions, darkMode }: { transactions: Transaction[], d
                   )}>{t.category}</span>
                 </td>
                 <td className={cn(
-                  "px-4 md:px-8 py-4 md:py-5 font-black whitespace-nowrap",
+                  "px-4 md:px-8 py-4 md:py-5 font-extrabold whitespace-nowrap",
                   t.type === 'Income' ? "text-green-500" : "text-red-500"
                 )}>
                   {t.type === 'Income' ? '+' : '-'}{formatCurrency(t.amount)}
