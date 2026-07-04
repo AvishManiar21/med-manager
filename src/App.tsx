@@ -293,7 +293,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={cn(
-                "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                 darkMode 
                   ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10" 
                   : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
@@ -325,7 +325,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={cn(
-                  "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium pr-12",
+                  "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium pr-12",
                   darkMode
                     ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                     : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
@@ -361,7 +361,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 className={cn(
-                  "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                  "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                   darkMode
                     ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                     : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
@@ -374,7 +374,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-blue-500/20 hover:bg-blue-700 hover:-translate-y-0.5 active:translate-y-0 transition-[transform,colors,opacity] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-blue-500/20 hover:bg-blue-700 hover:-translate-y-0.5 active:translate-y-0 transition-[transform,colors,opacity] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Processing..." : (isLogin ? "Sign In" : "Create Account")}
           </button>
@@ -389,7 +389,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
         <button
           onClick={handleGoogleLogin}
           className={cn(
-            "w-full py-4 rounded-2xl border font-bold flex items-center justify-center gap-3 transition-[transform,colors,opacity] hover:-translate-y-0.5 active:translate-y-0",
+            "w-full py-4 rounded-xl border font-bold flex items-center justify-center gap-3 transition-[transform,colors,opacity] hover:-translate-y-0.5 active:translate-y-0",
             darkMode 
               ? "bg-slate-800/50 border-slate-700 text-white hover:bg-slate-800" 
               : "bg-white border-slate-200 text-slate-900 hover:bg-slate-50 shadow-sm"
@@ -484,7 +484,7 @@ const StatCard = ({ label, value, icon: Icon, color, darkMode, glowClass, onClic
         <h3 className={cn("text-xl md:text-3xl font-extrabold tracking-tight truncate", darkMode ? "text-white" : "text-slate-900")}>{value}</h3>
       </div>
       <div className={cn(
-        "p-2.5 md:p-3.5 rounded-xl md:rounded-2xl shadow-inner transition-transform duration-500 group-hover:rotate-12 flex-shrink-0 ml-2",
+        "p-2.5 md:p-3.5 rounded-lg md:rounded-xl shadow-inner transition-transform duration-500 group-hover:rotate-12 flex-shrink-0 ml-2",
         darkMode ? "bg-white/5 border border-white/10" : color
       )}>
         <Icon size={24} className={cn(darkMode ? (
@@ -811,7 +811,7 @@ function AppContent() {
             <button
               onClick={() => setDarkMode(!darkMode)}
               className={cn(
-                "p-2 md:p-2.5 rounded-xl transition-[transform,colors,opacity] duration-300",
+                "p-2 md:p-2.5 rounded-lg transition-[transform,colors,opacity] duration-300",
                 darkMode ? "bg-white/10 text-amber-400 hover:bg-white/20" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               )}
             >
@@ -1192,7 +1192,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
                 required
                 type="text" 
                 className={cn(
-                  "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                   darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
                 )}
                 value={formData.name}
@@ -1205,7 +1205,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
                 required
                 type="email" 
                 className={cn(
-                  "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                   darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
                 )}
                 value={formData.email}
@@ -1216,7 +1216,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
               <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>Service Type</label>
               <select 
                 className={cn(
-                  "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                   darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                 )}
                 value={formData.serviceType}
@@ -1233,7 +1233,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
               <input 
                 type="number" 
                 className={cn(
-                  "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                   darkMode ? "bg-white/5 text-white border border-white/10" : "bg-slate-50 text-slate-900"
                 )}
                 value={formData.amountDue}
@@ -1245,7 +1245,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
               <input 
                 type="number" 
                 className={cn(
-                  "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                   darkMode ? "bg-white/5 text-white border border-white/10" : "bg-slate-50 text-slate-900"
                 )}
                 value={formData.amountPaid || ''}
@@ -1256,7 +1256,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
               <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>Payment Type</label>
               <select 
                 className={cn(
-                  "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                   darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                 )}
                 value={formData.paymentType}
@@ -1329,7 +1329,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
                   type="text" 
                   placeholder="e.g. Penicillin, Latex"
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
                   )}
                   value={formData.allergies}
@@ -1342,7 +1342,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
                   type="text" 
                   placeholder="e.g. Diabetes, High BP"
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
                   )}
                   value={formData.chronicConditions}
@@ -1355,7 +1355,7 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
               <textarea 
                 rows={3}
                 className={cn(
-                  "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                   darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
                 )}
                 value={formData.medicalHistory}
@@ -1673,7 +1673,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                 )}
               </div>
               <div className={cn(
-                "p-3 rounded-2xl transition-colors",
+                "p-3 rounded-xl transition-colors",
                 darkMode ? "bg-white/5 text-accent-teal group-hover:bg-accent-teal/10" : "bg-blue-50 text-blue-500"
               )}>
                 <Package size={24} />
@@ -1705,7 +1705,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                     }
                   }}
                   className={cn(
-                    "p-2.5 rounded-xl transition-[transform,colors,opacity]",
+                    "p-2.5 rounded-lg transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-accent-teal hover:bg-accent-teal/20" : "bg-blue-50 text-blue-600 hover:bg-blue-100"
                   )}
                 >
@@ -1718,7 +1718,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                     setDeleteTarget(item);
                   }}
                   className={cn(
-                    "p-2.5 rounded-xl transition-[transform,colors,opacity]",
+                    "p-2.5 rounded-lg transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-slate-400 hover:bg-red-500/20 hover:text-red-400" : "bg-slate-50 text-slate-600 hover:bg-red-50 hover:text-red-500"
                   )}
                 >
@@ -1745,7 +1745,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                   required 
                   type="text" 
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
                   )}
                   value={newItem.name} 
@@ -1757,7 +1757,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                 <select 
                   required 
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                   )}
                   value={newItem.category} 
@@ -1780,7 +1780,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                   <select 
                     required 
                     className={cn(
-                      "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                      "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                       darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                     )}
                     value={newItem.medicineType} 
@@ -1797,7 +1797,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                     required 
                     type="number" 
                     className={cn(
-                      "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                      "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                       darkMode ? "bg-white/5 text-white border border-white/10" : "bg-slate-50 text-slate-900"
                     )}
                     value={newItem.quantity} 
@@ -1809,7 +1809,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                   <select
                     required
                     className={cn(
-                      "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                      "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                       darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                     )}
                     value={newItem.unit}
@@ -1847,7 +1847,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                     type="text"
                     placeholder="e.g. 3M, Dentsply"
                     className={cn(
-                      "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                      "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                       darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
                     )}
                     value={newItem.company}
@@ -2197,7 +2197,7 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
                 <select 
                   required 
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                   )}
                   value={newAppt.patientId} 
@@ -2214,7 +2214,7 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
                     required 
                     type="date" 
                     className={cn(
-                      "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                      "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                       darkMode ? "bg-white/5 text-white border border-white/10" : "bg-slate-50 text-slate-900"
                     )}
                     value={newAppt.date} 
@@ -2227,7 +2227,7 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
                     required 
                     type="time" 
                     className={cn(
-                      "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                      "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                       darkMode ? "bg-white/5 text-white border border-white/10" : "bg-slate-50 text-slate-900"
                     )}
                     value={newAppt.time} 
@@ -2239,7 +2239,7 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
                 <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>Service Type</label>
                 <select 
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                   )}
                   value={newAppt.serviceType} 
@@ -2514,7 +2514,7 @@ function PrescriptionsView({ patients, prescriptions, doctorProfile, user, darkM
                 <select
                   required
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white border border-white/10 [&>option]:bg-slate-900" : "bg-slate-50 text-slate-900"
                   )}
                   value={formData.patientId}
@@ -2592,7 +2592,7 @@ function PrescriptionsView({ patients, prescriptions, doctorProfile, user, darkM
                 <textarea 
                   rows={3}
                   className={cn(
-                    "w-full px-4 py-3 border-none rounded-xl focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
+                    "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
                     darkMode ? "bg-white/5 text-white border border-white/10" : "bg-slate-50 text-slate-900"
                   )}
                   value={formData.instructions}
@@ -2880,7 +2880,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     className={cn(
-                      "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                      "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                       darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                     )}
                   />
@@ -2927,7 +2927,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                     value={doctorInfo.specialization}
                     onChange={(e) => setDoctorInfo({...doctorInfo, specialization: e.target.value})}
                     className={cn(
-                      "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                      "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                       darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                     )}
                   />
@@ -2941,7 +2941,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                     value={doctorInfo.licenseNo}
                     onChange={(e) => setDoctorInfo({...doctorInfo, licenseNo: e.target.value})}
                     className={cn(
-                      "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                      "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                       darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                     )}
                   />
@@ -2954,7 +2954,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                     value={doctorInfo.clinicName}
                     onChange={(e) => setDoctorInfo({...doctorInfo, clinicName: e.target.value})}
                     className={cn(
-                      "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                      "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                       darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                     )}
                   />
@@ -2983,7 +2983,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                   value={doctorInfo.bio}
                   onChange={(e) => setDoctorInfo({...doctorInfo, bio: e.target.value})}
                   className={cn(
-                    "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                    "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                     darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                   )}
                   placeholder="Tell patients about your experience and expertise..."
@@ -2994,7 +2994,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-[transform,colors,opacity] disabled:opacity-50 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
+                  className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-[transform,colors,opacity] disabled:opacity-50 shadow-lg shadow-blue-500/20 flex items-center justify-center gap-2"
                 >
                   {loading ? "Saving Changes..." : <><Upload size={20} /> Save Professional Profile</>}
                 </button>
@@ -3008,7 +3008,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                 darkMode ? "glass-card border-white/10" : "bg-white border-slate-100 shadow-sm"
               )}>
                 <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
-                  <div className="p-2.5 md:p-3 bg-amber-500 rounded-xl md:rounded-2xl text-white">
+                  <div className="p-2.5 md:p-3 bg-amber-500 rounded-lg md:rounded-xl text-white">
                     <Key size={22} />
                   </div>
                   <h3 className={cn("text-lg md:text-xl font-bold", darkMode ? "text-white" : "text-slate-900")}>Security</h3>
@@ -3022,7 +3022,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       className={cn(
-                        "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                        "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                         darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                       )}
                     />
@@ -3034,7 +3034,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className={cn(
-                        "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                        "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                         darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                       )}
                     />
@@ -3101,7 +3101,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   className={cn(
-                    "w-full px-5 py-4 rounded-2xl border outline-none transition-[transform,colors,opacity] font-medium",
+                    "w-full px-5 py-4 rounded-xl border outline-none transition-[transform,colors,opacity] font-medium",
                     darkMode ? "bg-slate-800/50 border-slate-700 text-white focus:border-blue-500" : "bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500"
                   )}
                 />
@@ -3120,7 +3120,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-[transform,colors,opacity] disabled:opacity-50"
+                  className="flex-1 bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-[transform,colors,opacity] disabled:opacity-50"
                 >
                   {loading ? "Verifying..." : "Confirm"}
                 </button>
