@@ -83,7 +83,7 @@ import {
   Appointment, 
   InventoryItem 
 } from './types';
-import { cn, formatCurrency, formatDate } from './lib/utils';
+import { cn, formatCurrency, formatDate, getExpirationStatus, getExpirationColors, getExpirationBadge } from './lib/utils';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import {
@@ -1533,7 +1533,7 @@ function AnalyticsView({ transactions, patients, darkMode }: { transactions: Tra
 
 function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], darkMode: boolean }) {
   const [showAdd, setShowAdd] = useState(false);
-  const [newItem, setNewItem] = useState({ name: '', category: 'PPE & Disposables', medicineType: '', quantity: 0, unit: 'pcs', minThreshold: 5, purchasePrice: 0, company: '' });
+  const [newItem, setNewItem] = useState({ name: '', category: 'PPE & Disposables', medicineType: '', quantity: 0, unit: 'pcs', minThreshold: 5, purchasePrice: 0, company: '', expirationDate: '' });
   const [error, setError] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<InventoryItem | null>(null);
   const [reduceAmount, setReduceAmount] = useState(1);
@@ -1598,6 +1598,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
         minThreshold: newItem.minThreshold,
         purchasePrice: newItem.purchasePrice,
         company: newItem.company,
+        expirationDate: newItem.expirationDate || null,
         lastRestocked: new Date().toISOString()
       });
 
@@ -1616,7 +1617,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
       }
 
       setShowAdd(false);
-      setNewItem({ name: '', category: 'PPE & Disposables', medicineType: '', quantity: 0, unit: 'pcs', minThreshold: 5, purchasePrice: 0, company: '' });
+      setNewItem({ name: '', category: 'PPE & Disposables', medicineType: '', quantity: 0, unit: 'pcs', minThreshold: 5, purchasePrice: 0, company: '', expirationDate: '' });
     } catch (err) {
       const msg = handleFirestoreError(err, OperationType.CREATE, 'inventory');
       setError(msg);
@@ -1647,14 +1648,36 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
         </div>
       ) : (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-        {inventory.map(item => (
+        {useMemo(() => {
+          return [...inventory].sort((a, b) => {
+            const statusA = getExpirationStatus(a.expirationDate);
+            const statusB = getExpirationStatus(b.expirationDate);
+
+            const priority = { expired: 0, 'expiring-soon': 1, 'expiring-warning': 2, safe: 3 };
+            return priority[statusA] - priority[statusB];
+          });
+        }, [inventory]).map(item => {
+          const expStatus = getExpirationStatus(item.expirationDate);
+          const badge = getExpirationBadge(expStatus);
+
+          return (
           <div key={item.id} className={cn(
             "p-6 rounded-3xl border transition-[transform,colors,opacity] duration-300 group hover:scale-[1.02]",
-            darkMode ? "glass-card border-white/10 hover:border-accent-teal/30" : "bg-white border-slate-100 shadow-sm hover:shadow-md"
+            darkMode ? `glass-card ${getExpirationColors(expStatus, darkMode)} hover:border-accent-teal/30` : `bg-white ${getExpirationColors(expStatus, darkMode)} shadow-sm hover:shadow-md`
           )}>
             <div className="flex items-start justify-between mb-4">
               <div>
                 <h3 className={cn("font-bold text-lg", darkMode ? "text-white" : "text-slate-900")}>{item.name}</h3>
+                {badge.text && (
+                  <div className={cn(
+                    "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-bold mt-2 mb-1",
+                    badge.bg, badge.color
+                  )}>
+                    <AlertCircle size={12} />
+                    {badge.text}
+                    {item.expirationDate && ` - ${formatDate(item.expirationDate)}`}
+                  </div>
+                )}
                 <div className="flex flex-wrap gap-1 mt-2 mb-2">
                   <p className={cn(
                     "text-[10px] font-bold px-2 py-0.5 rounded-full",
@@ -1727,7 +1750,8 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
       )}
 
@@ -1854,6 +1878,26 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                     onChange={e => setNewItem({...newItem, company: e.target.value})}
                   />
                 </div>
+              </div>
+              <div className="space-y-2">
+                <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>
+                  Expiration Date {newItem.category === 'Medicine' && <span className="text-red-500">*</span>}
+                </label>
+                <input
+                  type="date"
+                  required={newItem.category === 'Medicine'}
+                  min={new Date().toISOString().split('T')[0]}
+                  placeholder="YYYY-MM-DD"
+                  className={cn(
+                    "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity]",
+                    darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
+                  )}
+                  value={newItem.expirationDate}
+                  onChange={e => setNewItem({...newItem, expirationDate: e.target.value})}
+                />
+                {newItem.category === 'Medicine' && !newItem.expirationDate && (
+                  <p className="text-xs text-red-500 font-medium">Expiration date is required for medicines</p>
+                )}
               </div>
               {newItem.purchasePrice > 0 && newItem.quantity > 0 && (
                 <div className={cn(
@@ -2327,6 +2371,31 @@ function PrescriptionsView({ patients, prescriptions, doctorProfile, user, darkM
     e.preventDefault();
     setLoading(true);
     try {
+      // Validate medicines are not expired
+      const medicineNames = formData.medicines.map(m => m.name.trim().toLowerCase());
+      const inventoryCheck = await getDocs(collection(db, 'inventory'));
+      const expiredMeds: string[] = [];
+
+      inventoryCheck.docs.forEach(doc => {
+        const item = doc.data() as InventoryItem;
+        if (item.category === 'Medicine' &&
+            medicineNames.includes(item.name.toLowerCase())) {
+          const status = getExpirationStatus(item.expirationDate);
+          if (status === 'expired') {
+            expiredMeds.push(item.name);
+          }
+        }
+      });
+
+      if (expiredMeds.length > 0) {
+        setMessage({
+          type: 'error',
+          text: `Cannot prescribe expired medicines: ${expiredMeds.join(', ')}. Please check inventory.`
+        });
+        setLoading(false);
+        return;
+      }
+
       const doctorName = doctorProfile?.displayName || user.displayName || 'Doctor';
       const dateStr = new Date().toISOString();
       const prescriptionData = {

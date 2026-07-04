@@ -70,7 +70,10 @@ export interface InventoryItem {
   lastRestocked: string;
   purchasePrice?: number;
   company?: string;
+  expirationDate?: string;
 }
+
+export type ExpirationStatus = 'expired' | 'expiring-soon' | 'expiring-warning' | 'safe';
 
 export interface Transaction {
   id: string;
