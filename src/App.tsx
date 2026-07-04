@@ -258,7 +258,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
       )}>
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white mb-4 shadow-lg shadow-blue-500/20">
-            <Users size={32} />
+            <span className="text-3xl font-bold tracking-tight">KD</span>
           </div>
           <h1 className={cn("text-3xl font-extrabold tracking-tight mb-2", darkMode ? "text-white" : "text-slate-900")}>
             {isLogin ? "KHAN DENTAL" : "Create Account"}
