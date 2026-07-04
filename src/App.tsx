@@ -1826,7 +1826,7 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
                     <span className={cn(
                       "absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold pointer-events-none",
                       darkMode ? "text-slate-400" : "text-slate-500"
-                    )}>৳</span>
+                    )}>$</span>
                     <input
                       type="number"
                       min="0"
