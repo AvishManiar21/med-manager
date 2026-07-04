@@ -694,7 +694,9 @@ function AppContent() {
       .reduce((sum, t) => sum + t.amount, 0);
     const pendingPayments = patients.reduce((sum, p) => sum + (p.amountDue - p.amountPaid), 0);
     const today = new Date().toISOString().split('T')[0];
-    const todayAppointments = reconciledAppointments.filter(a => a.date === today).length;
+    const todayAppointments = reconciledAppointments.filter(a =>
+      a.date === today && a.status !== 'Cancelled'
+    ).length;
     return { totalRevenue, pendingPayments, todayAppointments, totalPatients: patients.length };
   }, [reconciledTransactions, reconciledAppointments, patients]);
 
@@ -2076,11 +2078,31 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
   const [showAdd, setShowAdd] = useState(false);
   const [newAppt, setNewAppt] = useState({ patientId: '', date: '', time: '', serviceType: ServiceType.CLEANING });
   const [error, setError] = useState('');
+  const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
+  const [cancelReason, setCancelReason] = useState('');
+  const [cancelling, setCancelling] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'scheduled' | 'completed' | 'cancelled'>('all');
 
   const visibleAppointments = useMemo(() => {
-    if (!dateFilter) return appointments;
-    return appointments.filter(a => a.date === dateFilter);
-  }, [appointments, dateFilter]);
+    let filtered = appointments;
+
+    // Date filter
+    if (dateFilter) {
+      filtered = filtered.filter(a => a.date === dateFilter);
+    }
+
+    // Status filter
+    if (statusFilter !== 'all') {
+      const statusMap = {
+        'scheduled': 'Scheduled',
+        'completed': 'Completed',
+        'cancelled': 'Cancelled'
+      };
+      filtered = filtered.filter(a => a.status === statusMap[statusFilter]);
+    }
+
+    return filtered;
+  }, [appointments, dateFilter, statusFilter]);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -2099,6 +2121,29 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
     } catch (err) {
       const msg = handleFirestoreError(err, OperationType.CREATE, 'appointments');
       setError(msg);
+    }
+  };
+
+  const handleCancelAppointment = (appt: Appointment) => {
+    setCancelTarget(appt);
+    setCancelReason('');
+  };
+
+  const confirmCancellation = async () => {
+    if (!cancelTarget) return;
+    setCancelling(true);
+    try {
+      await updateDoc(doc(db, 'appointments', cancelTarget.id), {
+        status: 'Cancelled',
+        cancellationReason: cancelReason || 'No reason provided',
+        cancelledAt: new Date().toISOString()
+      });
+      setCancelTarget(null);
+      setCancelReason('');
+    } catch (error) {
+      alert(handleFirestoreError(error, OperationType.UPDATE, `appointments/${cancelTarget.id}`));
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -2137,6 +2182,25 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
             )}
           >Clear</button>
         )}
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {(['all', 'scheduled', 'completed', 'cancelled'] as const).map(status => (
+          <button
+            key={status}
+            onClick={() => setStatusFilter(status)}
+            className={cn(
+              "px-4 py-2 rounded-xl font-bold text-sm transition-[transform,colors,opacity]",
+              statusFilter === status
+                ? "bg-blue-600 text-white shadow-lg"
+                : darkMode
+                ? "bg-white/5 text-slate-400 hover:bg-white/10"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+            )}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </button>
+        ))}
       </div>
 
       <div className={cn(
@@ -2189,32 +2253,59 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
                     "px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap",
                     appt.status === 'Completed'
                       ? (darkMode ? "bg-green-500/10 text-green-400" : "bg-emerald-50 text-emerald-600")
+                      : appt.status === 'Cancelled'
+                      ? (darkMode ? "bg-orange-500/10 text-orange-400" : "bg-orange-50 text-orange-600")
                       : (darkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-50 text-blue-600")
                   )}>{appt.status}</span>
                 </td>
                 <td className="px-4 md:px-8 py-4 md:py-5 text-right">
                   <div className="flex items-center justify-end gap-2">
+                    {appt.status !== 'Completed' && appt.status !== 'Cancelled' && (
+                      <button
+                        onClick={async () => {
+                          try {
+                            await updateDoc(doc(db, 'appointments', appt.id), { status: 'Completed' });
+                          } catch (error) {
+                            alert(handleFirestoreError(error, OperationType.UPDATE, `appointments/${appt.id}`));
+                          }
+                        }}
+                        className={cn(
+                          "p-2 rounded-lg transition-colors",
+                          darkMode ? "hover:bg-green-500/10 text-green-400" : "hover:bg-emerald-50 text-emerald-600"
+                        )}
+                        title="Mark as Completed"
+                      >
+                        <CheckCircle2 size={18} />
+                      </button>
+                    )}
+
+                    {appt.status !== 'Cancelled' && appt.status !== 'Completed' && (
+                      <button
+                        onClick={() => handleCancelAppointment(appt)}
+                        className={cn(
+                          "p-2 rounded-lg transition-colors",
+                          darkMode ? "hover:bg-orange-500/10 text-orange-400" : "hover:bg-orange-50 text-orange-600"
+                        )}
+                        title="Cancel Appointment"
+                      >
+                        <X size={18} />
+                      </button>
+                    )}
+
                     <button
                       onClick={async () => {
-                        try {
-                          await updateDoc(doc(db, 'appointments', appt.id), { status: 'Completed' });
-                        } catch (error) {
-                          alert(handleFirestoreError(error, OperationType.UPDATE, `appointments/${appt.id}`));
-                        }
-                      }}
-                      className={cn("p-2 rounded-lg transition-colors", darkMode ? "hover:bg-green-500/10 text-green-400" : "hover:bg-emerald-50 text-emerald-600")}
-                    >
-                      <CheckCircle2 size={18} />
-                    </button>
-                    <button
-                      onClick={async () => {
+                        if (!confirm('Delete this appointment permanently?')) return;
                         try {
                           await deleteDoc(doc(db, 'appointments', appt.id));
                         } catch (error) {
                           alert(handleFirestoreError(error, OperationType.DELETE, `appointments/${appt.id}`));
                         }
                       }}
-                      className={cn("p-2 rounded-lg transition-colors", darkMode ? "hover:bg-red-500/10 text-red-400" : "hover:bg-red-50 text-red-600")}
+                      className={cn(
+                        "p-2 rounded-lg transition-colors",
+                        darkMode ? "hover:bg-red-500/10 text-red-400" : "hover:bg-red-50 text-red-600"
+                      )}
+                      title="Delete Permanently"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -2318,6 +2409,61 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
               </div>
             )}
           </form>
+        </div>
+      )}
+
+      {cancelTarget && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className={cn(
+            "rounded-3xl p-6 md:p-8 max-w-md w-full space-y-6 shadow-2xl",
+            darkMode ? "glass-card" : "bg-white"
+          )}>
+            <div>
+              <h2 className={cn("text-2xl font-bold", darkMode ? "text-white" : "text-slate-900")}>
+                Cancel Appointment
+              </h2>
+              <p className={cn("text-sm font-medium mt-2", darkMode ? "text-slate-400" : "text-slate-500")}>
+                {cancelTarget.patientName} - {formatDate(cancelTarget.date)} at {cancelTarget.time}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>
+                Cancellation Reason (Optional)
+              </label>
+              <textarea
+                rows={3}
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="e.g., Patient requested reschedule, Emergency, etc."
+                className={cn(
+                  "w-full px-4 py-3 border-none rounded-lg transition-[transform,colors,opacity] resize-none",
+                  darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
+                )}
+              />
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => {setCancelTarget(null); setCancelReason('');}}
+                disabled={cancelling}
+                className={cn(
+                  "flex-1 py-3 border rounded-xl font-bold transition-[transform,colors,opacity]",
+                  darkMode ? "border-white/10 text-slate-400 hover:bg-white/5" : "border-slate-200 text-slate-600 hover:bg-slate-50",
+                  cancelling && "opacity-50 cursor-not-allowed"
+                )}
+              >
+                Keep Appointment
+              </button>
+              <button
+                onClick={confirmCancellation}
+                disabled={cancelling}
+                className="flex-1 py-3 bg-orange-600 text-white rounded-xl font-bold shadow-lg hover:bg-orange-700 transition-[transform,colors,opacity] disabled:opacity-50"
+              >
+                {cancelling ? 'Cancelling...' : 'Confirm Cancellation'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
