@@ -261,10 +261,10 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
             <Users size={32} />
           </div>
           <h1 className={cn("text-3xl font-black tracking-tight mb-2", darkMode ? "text-white" : "text-slate-900")}>
-            {isLogin ? "Welcome Back" : "Create Account"}
+            {isLogin ? "KHAN DENTAL" : "Create Account"}
           </h1>
           <p className={cn("text-sm font-medium", darkMode ? "text-slate-400" : "text-slate-500")}>
-            {isLogin ? "Enter your credentials to access your dashboard" : "Join our dental management platform today"}
+            {isLogin ? "Practice Management System" : "Join our dental management platform today"}
           </p>
         </div>
 
