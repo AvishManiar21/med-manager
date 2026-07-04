@@ -838,7 +838,7 @@ function AppContent() {
             <div className="space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className={cn("text-2xl md:text-3xl font-bold", darkMode ? "text-white" : "text-slate-900")}>Welcome Back, {user.displayName ? `Dr. ${user.displayName.split(' ')[0]}` : 'Doctor'} 👋</h2>
+                  <h2 className={cn("text-2xl md:text-3xl font-bold", darkMode ? "text-white" : "text-slate-900")}>Welcome Back, {user.displayName ? `Dr. ${user.displayName.split(' ')[0]}` : 'Doctor'}</h2>
                   <p className="text-slate-500 text-sm md:text-base">Manage your patients and payments</p>
                 </div>
                 <button
