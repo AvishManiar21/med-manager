@@ -284,7 +284,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className={cn("block text-xs font-bold uppercase tracking-widest mb-2 ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>
+            <label className={cn("block text-xs font-bold tracking-wide mb-2 ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>
               Email Address
             </label>
             <input
@@ -304,7 +304,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
 
           <div>
             <div className="flex items-center justify-between mb-2 ml-1">
-              <label className={cn("block text-xs font-bold uppercase tracking-widest", darkMode ? "text-slate-500" : "text-slate-400")}>
+              <label className={cn("block text-xs font-bold tracking-wide", darkMode ? "text-slate-500" : "text-slate-400")}>
                 Password
               </label>
               {isLogin && (
@@ -352,7 +352,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
 
           {!isLogin && (
             <div>
-              <label className={cn("block text-xs font-bold uppercase tracking-widest mb-2 ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>
+              <label className={cn("block text-xs font-bold tracking-wide mb-2 ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>
                 Confirm Password
               </label>
               <input
@@ -382,7 +382,7 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
 
         <div className="my-8 flex items-center gap-4">
           <div className={cn("flex-1 h-px", darkMode ? "bg-slate-800" : "bg-slate-100")}></div>
-          <span className={cn("text-xs font-bold uppercase tracking-widest", darkMode ? "text-slate-600" : "text-slate-400")}>Or continue with</span>
+          <span className={cn("text-xs font-bold tracking-wide", darkMode ? "text-slate-600" : "text-slate-400")}>Or continue with</span>
           <div className={cn("flex-1 h-px", darkMode ? "bg-slate-800" : "bg-slate-100")}></div>
         </div>
 
@@ -480,7 +480,7 @@ const StatCard = ({ label, value, icon: Icon, color, darkMode, glowClass, onClic
     )}
     <div className="flex items-start justify-between relative z-10">
       <div className="min-w-0 flex-1">
-        <p className={cn("text-[10px] md:text-xs font-bold uppercase tracking-widest mb-1 md:mb-2 opacity-60 truncate", darkMode ? "text-slate-300" : "text-slate-500")}>{label}</p>
+        <p className={cn("text-[10px] md:text-xs font-bold tracking-wide mb-1 md:mb-2 opacity-60 truncate", darkMode ? "text-slate-300" : "text-slate-500")}>{label}</p>
         <h3 className={cn("text-xl md:text-3xl font-black tracking-tight truncate", darkMode ? "text-white" : "text-slate-900")}>{value}</h3>
       </div>
       <div className={cn(
@@ -2874,7 +2874,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
               </div>
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Full Name</label>
+                  <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Full Name</label>
                   <input
                     type="text"
                     value={displayName}
@@ -2886,7 +2886,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Contact Phone</label>
+                  <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Contact Phone</label>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
@@ -2919,7 +2919,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Specialization</label>
+                  <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Specialization</label>
                   <input
                     type="text"
                     required
@@ -2933,7 +2933,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>License Number</label>
+                  <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>License Number</label>
                   <input
                     type="text"
                     required
@@ -2947,7 +2947,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Clinic Name</label>
+                  <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Clinic Name</label>
                   <input
                     type="text"
                     required
@@ -2960,7 +2960,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Clinic Address</label>
+                  <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Clinic Address</label>
                   <div className="relative">
                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
@@ -2977,7 +2977,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
               </div>
 
               <div className="mt-6 space-y-2">
-                <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Professional Bio</label>
+                <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Professional Bio</label>
                 <textarea
                   rows={4}
                   value={doctorInfo.bio}
@@ -3016,7 +3016,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
 
                 <div className="space-y-6">
                   <div className="space-y-2">
-                    <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>New Password</label>
+                    <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>New Password</label>
                     <input
                       type="password"
                       value={newPassword}
@@ -3028,7 +3028,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Confirm Password</label>
+                    <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Confirm Password</label>
                     <input
                       type="password"
                       value={confirmPassword}
@@ -3093,7 +3093,7 @@ function ProfileView({ user, darkMode }: { user: User, darkMode: boolean }) {
 
             <form onSubmit={handleReauth} className="space-y-6">
               <div className="space-y-2">
-                <label className={cn("text-xs font-bold uppercase tracking-widest ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Current Password</label>
+                <label className={cn("text-xs font-bold tracking-wide ml-1", darkMode ? "text-slate-500" : "text-slate-400")}>Current Password</label>
                 <input
                   type="password"
                   required
