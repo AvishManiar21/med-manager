@@ -17,10 +17,11 @@ import { cn } from '../lib/utils';
 
 interface LandingPageProps {
   onGetStarted: () => void;
+  onPatientPortal: () => void;
   darkMode: boolean;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, darkMode }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, onPatientPortal, darkMode }) => {
   const features = [
     {
       icon: Users,
@@ -89,18 +90,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onGetStarted, darkMode
                 DentalFlow Pro
               </span>
             </div>
-            <button
-              onClick={onGetStarted}
-              className={cn(
-                "px-6 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2",
-                darkMode
-                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/50"
-                  : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30"
-              )}
-            >
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={onPatientPortal}
+                className={cn(
+                  "px-5 py-2.5 rounded-xl font-semibold transition-all duration-200",
+                  darkMode
+                    ? "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200"
+                )}
+              >
+                Patient Portal
+              </button>
+              <button
+                onClick={onGetStarted}
+                className={cn(
+                  "px-6 py-2.5 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2",
+                  darkMode
+                    ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/50"
+                    : "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/30"
+                )}
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </nav>

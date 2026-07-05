@@ -120,3 +120,40 @@ export interface Transaction {
   description: string;
   inventoryItemId?: string;
 }
+
+export interface Medicine {
+  name: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+}
+
+export interface Prescription {
+  id: string;
+  patientId: string;
+  patientName: string;
+  patientEmail: string;
+  medicines: Medicine[];
+  instructions: string;
+  doctorName: string;
+  date: string;
+}
+
+export interface Doctor {
+  uid: string;
+  email: string;
+  displayName: string;
+  role: 'admin' | 'doctor' | 'staff';
+  disabled: boolean;
+  permissions: Record<string, boolean>;
+  createdAt: string;
+}
+
+export interface PatientUser {
+  id: string;
+  email: string;
+  patientId: string;  // Links to Patient collection
+  displayName: string;
+  createdAt: string;
+  lastLogin?: string;
+}

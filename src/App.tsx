@@ -93,6 +93,7 @@ import { INVENTORY_CATEGORIES, MEDICINE_TYPES, INVENTORY_UNITS } from './constan
 import MedicalHistoryManager from './components/MedicalHistoryManager';
 import { CalendarView } from './components/CalendarView';
 import { LandingPage } from './components/LandingPage';
+import { PatientPortal } from './components/PatientPortal';
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -529,6 +530,8 @@ export default function App() {
     return !sessionStorage.getItem('visited');
   });
 
+  const [showPatientPortal, setShowPatientPortal] = useState(false);
+
   const [darkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('theme') === 'dark' ||
@@ -540,12 +543,32 @@ export default function App() {
   const handleGetStarted = () => {
     sessionStorage.setItem('visited', 'true');
     setShowLanding(false);
+    setShowPatientPortal(false);
   };
 
-  if (showLanding) {
-    return <LandingPage onGetStarted={handleGetStarted} darkMode={darkMode} />;
+  const handlePatientPortal = () => {
+    sessionStorage.setItem('visited', 'true');
+    setShowLanding(false);
+    setShowPatientPortal(true);
+  };
+
+  const handleBackToLanding = () => {
+    setShowLanding(true);
+    setShowPatientPortal(false);
+    sessionStorage.removeItem('visited');
+  };
+
+  // Show patient portal
+  if (showPatientPortal) {
+    return <PatientPortal onBack={handleBackToLanding} darkMode={darkMode} />;
   }
 
+  // Show landing page
+  if (showLanding) {
+    return <LandingPage onGetStarted={handleGetStarted} onPatientPortal={handlePatientPortal} darkMode={darkMode} />;
+  }
+
+  // Show staff/admin app
   return (
     <AppContent />
   );
