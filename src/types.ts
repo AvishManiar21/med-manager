@@ -51,6 +51,21 @@ export interface ChronicCondition {
   notes?: string;
 }
 
+export type ImageType = 'xray' | 'intraoral' | 'extraoral' | 'document' | 'other';
+
+export interface ImageAttachment {
+  id: string;
+  fileName: string;
+  fileUrl: string;
+  fileSize: number;
+  mimeType: string;
+  imageType: ImageType;
+  uploadedBy: string;
+  uploadedAt: string;
+  description?: string;
+  thumbnailUrl?: string;
+}
+
 export interface Installment {
   week: number;
   amount: number;
@@ -78,6 +93,9 @@ export interface Patient {
   medicalConditions?: MedicalCondition[];
   allergyList?: Allergy[];
   chronicConditionList?: ChronicCondition[];
+
+  // IMAGE ATTACHMENTS
+  images?: ImageAttachment[];
 
   createdAt: string;
   updatedAt: string;
