@@ -42,7 +42,8 @@ import {
   Printer,
   Inbox,
   ShieldAlert,
-  Shield
+  Shield,
+  Image as ImageIcon
 } from 'lucide-react';
 import {
   collection,
@@ -98,6 +99,7 @@ import { CalendarView } from './components/CalendarView';
 import { LandingPage } from './components/LandingPage';
 import { PatientPortal } from './components/PatientPortal';
 import { AuditLogViewer } from './components/AuditLogViewer';
+import { ImageUpload } from './components/ImageUpload';
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -605,6 +607,7 @@ function AppContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
+  const [viewingPatient, setViewingPatient] = useState<Patient | null>(null);
   const [patientFilter, setPatientFilter] = useState<'all' | 'unpaid'>('all');
   const [apptDateFilter, setApptDateFilter] = useState<string>('');
 
@@ -1057,9 +1060,17 @@ function AppContent() {
                         </td>
                         <td className="px-4 md:px-6 py-3 md:py-4">
                           <div className="flex items-center gap-1 md:gap-2">
-                            <button 
+                            <button
+                              onClick={() => setViewingPatient(patient)}
+                              className={cn("p-2 rounded-lg transition-colors", darkMode ? "hover:bg-purple-900/30 text-purple-400" : "hover:bg-purple-50 text-purple-600")}
+                              title="View Details & Images"
+                            >
+                              <ImageIcon size={18} />
+                            </button>
+                            <button
                               onClick={() => { setEditingPatient(patient); setShowAddModal(true); }}
                               className={cn("p-2 rounded-lg transition-colors", darkMode ? "hover:bg-blue-900/30 text-blue-400" : "hover:bg-blue-50 text-blue-600")}
+                              title="Edit Patient"
                             >
                               <Edit2 size={18} />
                             </button>
@@ -1152,9 +1163,19 @@ function AppContent() {
 
       {/* Add/Edit Patient Modal */}
       {showAddModal && (
-        <AddPatientModal 
-          onClose={() => setShowAddModal(false)} 
+        <AddPatientModal
+          onClose={() => setShowAddModal(false)}
           patient={editingPatient}
+          darkMode={darkMode}
+        />
+      )}
+
+      {/* Patient Details Modal */}
+      {viewingPatient && user && (
+        <PatientDetailsModal
+          patient={viewingPatient}
+          user={user}
+          onClose={() => setViewingPatient(null)}
           darkMode={darkMode}
         />
       )}
@@ -1481,6 +1502,212 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
             </div>
           )}
         </form>
+      </div>
+    </div>
+  );
+}
+
+function PatientDetailsModal({ patient, user, onClose, darkMode }: { patient: Patient, user: User, onClose: () => void, darkMode: boolean }) {
+  const [activeTab, setActiveTab] = useState<'info' | 'images'>('info');
+
+  return (
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className={cn(
+        "rounded-3xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-hidden transition-[transform,colors,opacity] duration-300",
+        darkMode ? "glass-card" : "bg-white"
+      )}>
+        {/* Header */}
+        <div className={cn(
+          "p-6 border-b flex items-center justify-between sticky top-0 z-10 transition-colors",
+          darkMode ? "bg-dark-bg/80 backdrop-blur-md border-white/10" : "bg-white border-slate-100"
+        )}>
+          <div>
+            <h2 className={cn("text-2xl font-bold", darkMode ? "text-white" : "text-slate-900")}>
+              Patient Details
+            </h2>
+            <p className={cn("text-sm mt-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+              {patient.name} ({patient.serialNo})
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className={cn("p-2 rounded-full transition-colors", darkMode ? "hover:bg-white/10 text-slate-400" : "hover:bg-slate-100 text-slate-500")}
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Tabs */}
+        <div className={cn(
+          "flex gap-1 px-6 border-b",
+          darkMode ? "border-white/10" : "border-slate-200"
+        )}>
+          <button
+            onClick={() => setActiveTab('info')}
+            className={cn(
+              "px-6 py-3 font-semibold transition-all border-b-2",
+              activeTab === 'info'
+                ? darkMode
+                  ? "border-blue-500 text-blue-400"
+                  : "border-blue-600 text-blue-600"
+                : darkMode
+                ? "border-transparent text-slate-400 hover:text-white"
+                : "border-transparent text-slate-600 hover:text-slate-900"
+            )}
+          >
+            Patient Info
+          </button>
+          <button
+            onClick={() => setActiveTab('images')}
+            className={cn(
+              "px-6 py-3 font-semibold transition-all border-b-2 flex items-center gap-2",
+              activeTab === 'images'
+                ? darkMode
+                  ? "border-blue-500 text-blue-400"
+                  : "border-blue-600 text-blue-600"
+                : darkMode
+                ? "border-transparent text-slate-400 hover:text-white"
+                : "border-transparent text-slate-600 hover:text-slate-900"
+            )}
+          >
+            <ImageIcon size={18} />
+            Images
+            {patient.images && patient.images.length > 0 && (
+              <span className={cn(
+                "px-2 py-0.5 rounded-full text-xs font-bold",
+                darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"
+              )}>
+                {patient.images.length}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+          {activeTab === 'info' && (
+            <div className="space-y-6">
+              {/* Basic Info */}
+              <div className={cn(
+                "p-6 rounded-2xl border",
+                darkMode ? "bg-white/5 border-white/10" : "bg-slate-50 border-slate-200"
+              )}>
+                <h3 className={cn("text-lg font-bold mb-4", darkMode ? "text-white" : "text-slate-900")}>
+                  Basic Information
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className={cn("text-sm font-semibold mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+                      Patient ID
+                    </p>
+                    <p className={cn("font-semibold", darkMode ? "text-white" : "text-slate-900")}>
+                      {patient.serialNo}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={cn("text-sm font-semibold mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+                      Name
+                    </p>
+                    <p className={cn("font-semibold", darkMode ? "text-white" : "text-slate-900")}>
+                      {patient.name}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={cn("text-sm font-semibold mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+                      Email
+                    </p>
+                    <p className={cn("font-semibold", darkMode ? "text-white" : "text-slate-900")}>
+                      {patient.email}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={cn("text-sm font-semibold mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+                      Service Type
+                    </p>
+                    <p className={cn("font-semibold", darkMode ? "text-white" : "text-slate-900")}>
+                      {patient.serviceType}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={cn("text-sm font-semibold mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+                      Payment Type
+                    </p>
+                    <p className={cn("font-semibold", darkMode ? "text-white" : "text-slate-900")}>
+                      {patient.paymentType}
+                    </p>
+                  </div>
+                  <div>
+                    <p className={cn("text-sm font-semibold mb-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+                      Status
+                    </p>
+                    <span className={cn(
+                      "inline-flex items-center gap-1 font-bold text-sm",
+                      patient.status === 'Paid' ? "text-green-500" : "text-amber-500"
+                    )}>
+                      {patient.status === 'Paid' ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                      {patient.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Medical History */}
+              {patient.allergyList && patient.allergyList.length > 0 && (
+                <div className={cn(
+                  "p-6 rounded-2xl border",
+                  darkMode ? "bg-white/5 border-white/10" : "bg-slate-50 border-slate-200"
+                )}>
+                  <h3 className={cn("text-lg font-bold mb-4", darkMode ? "text-white" : "text-slate-900")}>
+                    Allergies
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {patient.allergyList.map((allergy) => (
+                      <span
+                        key={allergy.id}
+                        className={cn(
+                          "px-3 py-2 rounded-lg text-sm font-semibold",
+                          darkMode ? "bg-red-500/20 text-red-300" : "bg-red-100 text-red-700"
+                        )}
+                      >
+                        {allergy.allergen}
+                        {allergy.severity && ` (${allergy.severity})`}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Chronic Conditions */}
+              {patient.chronicConditionList && patient.chronicConditionList.length > 0 && (
+                <div className={cn(
+                  "p-6 rounded-2xl border",
+                  darkMode ? "bg-white/5 border-white/10" : "bg-slate-50 border-slate-200"
+                )}>
+                  <h3 className={cn("text-lg font-bold mb-4", darkMode ? "text-white" : "text-slate-900")}>
+                    Chronic Conditions
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {patient.chronicConditionList.map((condition) => (
+                      <span
+                        key={condition.id}
+                        className={cn(
+                          "px-3 py-2 rounded-lg text-sm font-semibold",
+                          darkMode ? "bg-orange-500/20 text-orange-300" : "bg-orange-100 text-orange-700"
+                        )}
+                      >
+                        {condition.condition}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'images' && (
+            <ImageUpload patient={patient} user={user} darkMode={darkMode} />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -20,7 +20,8 @@ import {
   CheckCircle2,
   Clock,
   XCircle,
-  Pill
+  Pill,
+  Image as ImageIcon
 } from 'lucide-react';
 
 interface PatientDashboardProps {
@@ -29,7 +30,7 @@ interface PatientDashboardProps {
   darkMode: boolean;
 }
 
-type TabType = 'overview' | 'appointments' | 'prescriptions' | 'billing';
+type TabType = 'overview' | 'appointments' | 'prescriptions' | 'billing' | 'images';
 
 export function PatientDashboard({ user, onSignOut, darkMode }: PatientDashboardProps) {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -107,6 +108,7 @@ export function PatientDashboard({ user, onSignOut, darkMode }: PatientDashboard
     { id: 'appointments' as const, label: 'Appointments', icon: Calendar },
     { id: 'prescriptions' as const, label: 'Prescriptions', icon: FileText },
     { id: 'billing' as const, label: 'Billing', icon: DollarSign },
+    { id: 'images' as const, label: 'Images', icon: ImageIcon },
   ];
 
   if (loading) {
@@ -232,6 +234,7 @@ export function PatientDashboard({ user, onSignOut, darkMode }: PatientDashboard
             {activeTab === 'appointments' && <AppointmentsTab appointments={appointments} darkMode={darkMode} />}
             {activeTab === 'prescriptions' && <PrescriptionsTab prescriptions={prescriptions} darkMode={darkMode} />}
             {activeTab === 'billing' && <BillingTab patient={patient} transactions={transactions} darkMode={darkMode} />}
+            {activeTab === 'images' && <ImagesTab patient={patient} darkMode={darkMode} />}
           </div>
         </>
       )}
@@ -696,5 +699,116 @@ function BillingTab({ patient, transactions, darkMode }: { patient: Patient, tra
         )}
       </div>
     </div>
+  );
+}
+
+// Images Tab Component
+function ImagesTab({ patient, darkMode }: { patient: Patient, darkMode: boolean }) {
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+
+  if (!patient.images || patient.images.length === 0) {
+    return (
+      <div className={cn(
+        "text-center py-12 rounded-2xl border",
+        darkMode ? "bg-white/5 border-white/10 text-slate-400" : "bg-white border-slate-200 text-slate-600"
+      )}>
+        <ImageIcon className="w-12 h-12 mx-auto mb-3 opacity-50" />
+        <p className="font-semibold">No images uploaded</p>
+        <p className="text-sm mt-1">Your dental images will appear here</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {patient.images.map((image) => (
+          <div
+            key={image.id}
+            className={cn(
+              "rounded-xl border overflow-hidden group hover:shadow-lg transition-all cursor-pointer",
+              darkMode ? "bg-white/5 border-white/10" : "bg-white border-slate-200"
+            )}
+            onClick={() => setSelectedImage(image)}
+          >
+            {/* Image Preview */}
+            <div className="relative aspect-video bg-slate-900 flex items-center justify-center overflow-hidden">
+              {image.mimeType.startsWith('image/') ? (
+                <img
+                  src={image.fileUrl}
+                  alt={image.fileName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <FileText className="w-16 h-16 text-slate-400" />
+              )}
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <p className="text-white font-semibold">Click to view</p>
+              </div>
+            </div>
+
+            {/* Image Info */}
+            <div className="p-4">
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <p className={cn("font-semibold text-sm truncate", darkMode ? "text-white" : "text-slate-900")}>
+                  {image.fileName}
+                </p>
+                <span className={cn(
+                  "px-2 py-1 rounded text-xs font-bold uppercase flex-shrink-0",
+                  darkMode ? "bg-blue-500/20 text-blue-300" : "bg-blue-100 text-blue-700"
+                )}>
+                  {image.imageType}
+                </span>
+              </div>
+              {image.description && (
+                <p className={cn("text-sm mb-2", darkMode ? "text-slate-400" : "text-slate-600")}>
+                  {image.description}
+                </p>
+              )}
+              <div className={cn("text-xs space-y-1", darkMode ? "text-slate-400" : "text-slate-600")}>
+                <p>Uploaded: {new Date(image.uploadedAt).toLocaleDateString()}</p>
+                <p>By: {image.uploadedBy}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Image Preview Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <button
+            onClick={() => setSelectedImage(null)}
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+          >
+            <XCircle className="w-6 h-6 text-white" />
+          </button>
+          <div className="max-w-5xl max-h-full" onClick={(e) => e.stopPropagation()}>
+            {selectedImage.mimeType.startsWith('image/') ? (
+              <img
+                src={selectedImage.fileUrl}
+                alt={selectedImage.fileName}
+                className="max-w-full max-h-[90vh] object-contain rounded-lg"
+              />
+            ) : (
+              <iframe
+                src={selectedImage.fileUrl}
+                className="w-full h-[90vh] bg-white rounded-lg"
+                title={selectedImage.fileName}
+              />
+            )}
+            <div className="mt-4 text-center">
+              <p className="text-white font-semibold mb-2">{selectedImage.fileName}</p>
+              {selectedImage.description && (
+                <p className="text-slate-300 text-sm">{selectedImage.description}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
