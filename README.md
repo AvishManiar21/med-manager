@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🦷 Khan Dental — Practice Management Platform
+# 🦷 DentalFlow Pro — Practice Management Platform
 
 ### A modern, real-time clinic operations system for dentists who run a serious practice.
 
@@ -27,7 +27,7 @@ Patients, appointments, prescriptions, billing, inventory, and analytics — all
 
 ## 📌 Project Snapshot
 
-**Khan Dental** is a full-featured practice management platform built for a real dental clinic. It started as a simple patient list and evolved into a complete operations console with eight integrated modules and a hardened admin layer.
+**DentalFlow Pro** is a full-featured practice management platform built for dental clinics. It started as a simple patient list and evolved into a complete operations console with eight integrated modules and a hardened admin layer.
 
 The platform delivers:
 
@@ -132,7 +132,7 @@ med-manager/
         └── utils.ts            # `cn()`, formatters, helpers
 ```
 
-> Khan Dental is intentionally monolithic in `App.tsx` — every module shares the same Firestore subscription layer and a single `activeTab` state, which keeps cross-module aggregates (revenue, low-stock counts, appointment totals) perfectly in sync.
+> DentalFlow Pro is intentionally monolithic in `App.tsx` — every module shares the same Firestore subscription layer and a single `activeTab` state, which keeps cross-module aggregates (revenue, low-stock counts, appointment totals) perfectly in sync.
 
 ---
 
@@ -374,7 +374,7 @@ service cloud.firestore {
 
 ## 💡 Why This Project Matters
 
-Khan Dental shows what serious clinic software can look like when built with modern primitives:
+DentalFlow Pro shows what serious clinic software can look like when built with modern primitives:
 
 - A **single-page React app** that handles seven full modules without becoming a mess
 - **Real-time everywhere** — no manual refresh, no polling, no stale stats

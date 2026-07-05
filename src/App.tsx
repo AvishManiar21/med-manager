@@ -268,10 +268,10 @@ const LoginSignup = ({ darkMode }: { darkMode: boolean }) => {
       )}>
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white mb-4 shadow-lg shadow-blue-500/20">
-            <span className="text-3xl font-bold tracking-tight">KD</span>
+            <span className="text-3xl font-bold tracking-tight">DF</span>
           </div>
           <h1 className={cn("text-3xl font-extrabold tracking-tight mb-2", darkMode ? "text-white" : "text-slate-900")}>
-            {isLogin ? "KHAN DENTAL" : "Create Account"}
+            {isLogin ? "DentalFlow Pro" : "Create Account"}
           </h1>
           <p className={cn("text-sm font-medium", darkMode ? "text-slate-400" : "text-slate-500")}>
             {isLogin ? "Practice Management System" : "Join our dental management platform today"}
@@ -744,7 +744,7 @@ function AppContent() {
           <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md shadow-blue-100">
             <Users size={20} className="text-white" />
           </div>
-          {isSidebarOpen && <span className={cn("font-bold text-xl tracking-tight whitespace-nowrap", darkMode ? "text-white" : "text-slate-900")}>KHAN DENTAL</span>}
+          {isSidebarOpen && <span className={cn("font-bold text-xl tracking-tight whitespace-nowrap", darkMode ? "text-white" : "text-slate-900")}>DentalFlow Pro</span>}
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-4 overflow-hidden">
@@ -1019,7 +1019,7 @@ function AppContent() {
                                   const emailHtml = `
                                     <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
                                       <div style="background-color: #2563eb; color: white; padding: 24px; text-align: center;">
-                                        <h1 style="margin: 0;">KHAN DENTAL</h1>
+                                        <h1 style="margin: 0;">DentalFlow Pro</h1>
                                         <p style="margin: 4px 0 0 0; opacity: 0.8;">Invoice / Receipt</p>
                                       </div>
                                       <div style="padding: 24px;">
@@ -1041,11 +1041,11 @@ function AppContent() {
                                         </div>
                                       </div>
                                       <div style="background-color: #f8fafc; padding: 16px; text-align: center; font-size: 12px; color: #94a3b8;">
-                                        Thank you for choosing Khan Dental!
+                                        Thank you for choosing DentalFlow Pro!
                                       </div>
                                     </div>
                                   `;
-                                  await sendEmail(patient.email, `Invoice from Khan Dental - ${patient.serialNo}`, emailHtml);
+                                  await sendEmail(patient.email, `Invoice from DentalFlow Pro - ${patient.serialNo}`, emailHtml);
                                   alert('Invoice sent to patient email successfully!');
                                 } catch (err: any) {
                                   alert('Failed to send invoice: ' + err.message);
@@ -2615,7 +2615,7 @@ function PrescriptionsView({ patients, prescriptions, doctorProfile, user, darkM
         const emailHtml = `
           <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
             <div style="background-color: #2563eb; color: white; padding: 24px; text-align: center;">
-              <h1 style="margin: 0;">KHAN DENTAL</h1>
+              <h1 style="margin: 0;">DentalFlow Pro</h1>
               <p style="margin: 4px 0 0 0; opacity: 0.8;">Medical Prescription</p>
             </div>
             <div style="padding: 24px;">
@@ -2650,11 +2650,11 @@ function PrescriptionsView({ patients, prescriptions, doctorProfile, user, darkM
               ` : ''}
             </div>
             <div style="background-color: #f8fafc; padding: 16px; text-align: center; font-size: 12px; color: #94a3b8;">
-              Thank you for choosing Khan Dental!
+              Thank you for choosing DentalFlow Pro!
             </div>
           </div>
         `;
-        await sendEmail(formData.patientEmail, `Prescription from Khan Dental - ${formatDate(dateStr)}`, emailHtml);
+        await sendEmail(formData.patientEmail, `Prescription from DentalFlow Pro - ${formatDate(dateStr)}`, emailHtml);
         setMessage({ type: 'success', text: 'Prescription saved and emailed successfully!' });
       } catch {
         setMessage({ type: 'success', text: 'Prescription saved! Email could not be sent.' });
@@ -2742,7 +2742,7 @@ function PrescriptionsView({ patients, prescriptions, doctorProfile, user, darkM
                 onClick={async () => {
                   try {
                     setLoading(true);
-                    await sendEmail(p.patientEmail, `Re-sent Prescription from Khan Dental`, `Re-sent prescription details...`);
+                    await sendEmail(p.patientEmail, `Re-sent Prescription from DentalFlow Pro`, `Re-sent prescription details...`);
                     setMessage({ type: 'success', text: 'Email re-sent successfully!' });
                   } catch (err: any) {
                     setMessage({ type: 'error', text: err.message });
@@ -3431,7 +3431,7 @@ function SheetsView({ transactions, darkMode }: { transactions: Transaction[], d
     printWindow.document.write(`
       <html>
       <head>
-        <title>KHAN DENTAL - Financial Sheet - ${monthLabel}</title>
+        <title>DentalFlow Pro - Financial Sheet - ${monthLabel}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 40px; color: #0f172a; }
           h1 { font-size: 24px; margin: 0; color: #2563eb; }
@@ -3448,7 +3448,7 @@ function SheetsView({ transactions, darkMode }: { transactions: Transaction[], d
         </style>
       </head>
       <body>
-        <h1>KHAN DENTAL</h1>
+        <h1>DentalFlow Pro</h1>
         <div class="subtitle">Professional Dental Care & Surgery</div>
         <div class="meta">Monthly Financial Sheet &mdash; <strong>${monthLabel}</strong></div>
         <div class="summary">
@@ -3469,7 +3469,7 @@ function SheetsView({ transactions, darkMode }: { transactions: Transaction[], d
           <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th></tr></thead>
           <tbody>${rows.length > 0 ? rows : '<tr><td colspan="4" style="padding:20px;text-align:center;color:#94a3b8;">No transactions for this month</td></tr>'}</tbody>
         </table>
-        <div class="footer">Generated on ${new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' })} &bull; Khan Dental Practice Management</div>
+        <div class="footer">Generated on ${new Date().toLocaleDateString('en-US', { day: '2-digit', month: 'long', year: 'numeric' })} &bull; DentalFlow Pro Practice Management</div>
       </body>
       </html>
     `);
@@ -3621,7 +3621,7 @@ function generateInvoice(patient: Patient) {
   // Header
   doc.setFontSize(22);
   doc.setTextColor(37, 99, 235); // Blue-600
-  doc.text('KHAN DENTAL', 105, 20, { align: 'center' });
+  doc.text('DentalFlow Pro', 105, 20, { align: 'center' });
   
   doc.setFontSize(10);
   doc.setTextColor(100, 116, 139); // Slate-500
@@ -3668,7 +3668,7 @@ function generateInvoice(patient: Patient) {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'italic');
   doc.setTextColor(100, 116, 139);
-  doc.text('Thank you for choosing Khan Dental!', 105, 280, { align: 'center' });
+  doc.text('Thank you for choosing DentalFlow Pro!', 105, 280, { align: 'center' });
   
   doc.save(`Invoice_${patient.serialNo}.pdf`);
 }
