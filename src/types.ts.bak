@@ -25,32 +25,6 @@ export const SERVICE_PRICES: Record<ServiceType, number> = {
   [ServiceType.IMPLANTS]: 25000,
 };
 
-export interface MedicalCondition {
-  id: string;
-  condition: string;
-  diagnosedDate?: string;
-  notes?: string;
-  severity?: 'Mild' | 'Moderate' | 'Severe';
-  active: boolean;
-}
-
-export interface Allergy {
-  id: string;
-  allergen: string;
-  reaction?: string;
-  severity?: 'Mild' | 'Moderate' | 'Severe' | 'Life-threatening';
-  diagnosedDate?: string;
-}
-
-export interface ChronicCondition {
-  id: string;
-  condition: string;
-  diagnosedDate?: string;
-  currentMedication?: string;
-  controlled: boolean;
-  notes?: string;
-}
-
 export interface Installment {
   week: number;
   amount: number;
@@ -68,17 +42,9 @@ export interface Patient {
   paymentType: "Direct" | "Installments";
   installments: Installment[];
   status: "Paid" | "Unpaid";
-
-  // LEGACY FIELDS (keep for backward compatibility)
-  medicalHistory?: string[];
-  allergies?: string[];
-  chronicConditions?: string[];
-
-  // NEW STRUCTURED FIELDS
-  medicalConditions?: MedicalCondition[];
-  allergyList?: Allergy[];
-  chronicConditionList?: ChronicCondition[];
-
+  medicalHistory: string[];
+  allergies: string[];
+  chronicConditions: string[];
   createdAt: string;
   updatedAt: string;
 }

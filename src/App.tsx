@@ -75,15 +75,19 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth';
 import { db, auth } from './firebase';
-import { 
-  Patient, 
-  ServiceType, 
-  SERVICE_PRICES, 
-  Transaction, 
-  Appointment, 
-  InventoryItem 
+import {
+  Patient,
+  ServiceType,
+  SERVICE_PRICES,
+  Transaction,
+  Appointment,
+  InventoryItem,
+  MedicalCondition,
+  Allergy,
+  ChronicCondition
 } from './types';
 import { cn, formatCurrency, formatDate, getExpirationStatus, getExpirationColors, getExpirationBadge } from './lib/utils';
+import { MedicalHistoryManager } from './components/MedicalHistoryManager';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import {
@@ -1113,6 +1117,49 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
+  const [structuredAllergies, setStructuredAllergies] = useState<Allergy[]>([]);
+  const [structuredChronic, setStructuredChronic] = useState<ChronicCondition[]>([]);
+  const [structuredMedical, setStructuredMedicalConditions] = useState<MedicalCondition[]>([]);
+
+  useEffect(() => {
+    if (patient) {
+      // Load structured data or migrate from legacy
+      setStructuredAllergies(
+        patient.allergyList ||
+        (patient.allergies || []).map((a, idx) => ({
+          id: `allergy-${patient.id}-${idx}`,
+          allergen: a,
+          reaction: '',
+          severity: 'Mild' as const
+        }))
+      );
+
+      setStructuredChronic(
+        patient.chronicConditionList ||
+        (patient.chronicConditions || []).map((c, idx) => ({
+          id: `chronic-${patient.id}-${idx}`,
+          condition: c,
+          controlled: true
+        }))
+      );
+
+      setStructuredMedicalConditions(
+        patient.medicalConditions ||
+        (patient.medicalHistory || []).map((m, idx) => ({
+          id: `medical-${patient.id}-${idx}`,
+          condition: m,
+          active: true,
+          severity: 'Mild' as const
+        }))
+      );
+    } else {
+      // New patient - empty arrays
+      setStructuredAllergies([]);
+      setStructuredChronic([]);
+      setStructuredMedicalConditions([]);
+    }
+  }, [patient]);
+
   const handleServiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const service = e.target.value as ServiceType;
     setFormData({
@@ -1140,6 +1187,12 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
       medicalHistory: formData.medicalHistory.split(',').map(s => s.trim()).filter(s => s !== ''),
       allergies: formData.allergies.split(',').map(s => s.trim()).filter(s => s !== ''),
       chronicConditions: formData.chronicConditions.split(',').map(s => s.trim()).filter(s => s !== ''),
+
+      // Add new structured fields
+      medicalConditions: structuredMedical,
+      allergyList: structuredAllergies,
+      chronicConditionList: structuredChronic,
+
       updatedAt: new Date().toISOString(),
       createdAt: patient?.createdAt || new Date().toISOString(),
     };
@@ -1324,46 +1377,15 @@ function AddPatientModal({ onClose, patient, darkMode }: { onClose: () => void, 
 
           <div className="space-y-4">
             <h3 className={cn("font-bold border-b pb-2 transition-colors", darkMode ? "text-white border-white/10" : "text-slate-900 border-slate-100")}>Medical Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>Allergies</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. Penicillin, Latex"
-                  className={cn(
-                    "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
-                    darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
-                  )}
-                  value={formData.allergies}
-                  onChange={e => setFormData({...formData, allergies: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>Chronic Conditions</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. Diabetes, High BP"
-                  className={cn(
-                    "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
-                    darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
-                  )}
-                  value={formData.chronicConditions}
-                  onChange={e => setFormData({...formData, chronicConditions: e.target.value})}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className={cn("text-sm font-bold", darkMode ? "text-slate-400" : "text-slate-700")}>Medical History (comma separated)</label>
-              <textarea 
-                rows={3}
-                className={cn(
-                  "w-full px-4 py-3 border-none rounded-lg focus:ring-2 focus:ring-blue-100 transition-[transform,colors,opacity]",
-                  darkMode ? "bg-white/5 text-white placeholder:text-slate-500 border border-white/10" : "bg-slate-50 text-slate-900"
-                )}
-                value={formData.medicalHistory}
-                onChange={e => setFormData({...formData, medicalHistory: e.target.value})}
-              />
-            </div>
+            <MedicalHistoryManager
+              allergies={structuredAllergies}
+              chronicConditions={structuredChronic}
+              medicalConditions={structuredMedical}
+              onAllergiesChange={setStructuredAllergies}
+              onChronicChange={setStructuredChronic}
+              onMedicalChange={setStructuredMedicalConditions}
+              darkMode={darkMode}
+            />
           </div>
 
           <div className={cn(
