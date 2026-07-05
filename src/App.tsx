@@ -91,8 +91,11 @@ import { formatCurrency, formatDate } from './utils/formatting';
 import { getExpirationStatus, getExpirationColors, getExpirationBadge } from './utils/expiration';
 import { INVENTORY_CATEGORIES, MEDICINE_TYPES, INVENTORY_UNITS } from './constants/inventory';
 import MedicalHistoryManager from './components/MedicalHistoryManager';
+import { CalendarView } from './components/CalendarView';
+import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import './styles/calendar.css';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -2062,6 +2065,7 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
   const [cancelReason, setCancelReason] = useState('');
   const [cancelling, setCancelling] = useState(false);
   const [statusFilter, setStatusFilter] = useState<'all' | 'scheduled' | 'completed' | 'cancelled'>('all');
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
 
   const visibleAppointments = useMemo(() => {
     let filtered = appointments;
@@ -2134,12 +2138,49 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
           <h2 className={cn("text-2xl md:text-3xl font-extrabold tracking-tight", darkMode ? "text-white" : "text-slate-900")}>Appointment Calendar</h2>
           <p className={cn("mt-1 font-medium text-sm md:text-base", darkMode ? "text-slate-400" : "text-slate-500")}>Manage upcoming patient visits</p>
         </div>
-        <button
-          onClick={() => setShowAdd(true)}
-          className="bg-blue-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-2xl font-bold hover:bg-blue-700 transition-[transform,colors,opacity] flex items-center gap-2 shadow-lg shadow-blue-100/20 text-sm md:text-base self-start sm:self-auto"
-        >
-          <Plus size={18} /> <span className="hidden sm:inline">Schedule Appointment</span><span className="sm:hidden">Schedule</span>
-        </button>
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* View Mode Toggle */}
+          <div className={cn(
+            "flex items-center rounded-xl p-1 transition-colors",
+            darkMode ? "bg-white/5" : "bg-slate-100"
+          )}>
+            <button
+              onClick={() => setViewMode('list')}
+              className={cn(
+                "px-3 py-1.5 rounded-lg font-bold text-xs transition-[transform,colors,opacity] flex items-center gap-1.5",
+                viewMode === 'list'
+                  ? "bg-blue-600 text-white shadow-md"
+                  : darkMode
+                  ? "text-slate-400 hover:text-slate-300"
+                  : "text-slate-600 hover:text-slate-900"
+              )}
+            >
+              <ClipboardList size={14} />
+              <span className="hidden sm:inline">List</span>
+            </button>
+            <button
+              onClick={() => setViewMode('calendar')}
+              className={cn(
+                "px-3 py-1.5 rounded-lg font-bold text-xs transition-[transform,colors,opacity] flex items-center gap-1.5",
+                viewMode === 'calendar'
+                  ? "bg-blue-600 text-white shadow-md"
+                  : darkMode
+                  ? "text-slate-400 hover:text-slate-300"
+                  : "text-slate-600 hover:text-slate-900"
+              )}
+            >
+              <Calendar size={14} />
+              <span className="hidden sm:inline">Calendar</span>
+            </button>
+          </div>
+
+          <button
+            onClick={() => setShowAdd(true)}
+            className="bg-blue-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-2xl font-bold hover:bg-blue-700 transition-[transform,colors,opacity] flex items-center gap-2 shadow-lg shadow-blue-100/20 text-sm md:text-base"
+          >
+            <Plus size={18} /> <span className="hidden sm:inline">Schedule Appointment</span><span className="sm:hidden">Schedule</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -2183,121 +2224,153 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
         ))}
       </div>
 
-      <div className={cn(
-        "rounded-2xl md:rounded-3xl shadow-xl overflow-hidden border transition-[transform,colors,opacity]",
-        darkMode ? "glass-card border-white/10" : "bg-white border-slate-100 shadow-sm"
-      )}>
-        {visibleAppointments.length === 0 ? (
-          <EmptyState
-            darkMode={darkMode}
-            icon={Calendar}
-            message={
-              appointments.length === 0
-                ? "There is no data available"
-                : dateFilter
-                  ? `No appointments scheduled for ${formatDate(dateFilter)}`
-                  : "No appointments match your filter"
-            }
-          />
-        ) : (
-        <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[600px]">
-          <thead>
-            <tr className={cn(
-              "text-xs font-bold uppercase tracking-wider transition-colors",
-              darkMode ? "bg-white/5 text-slate-400" : "bg-slate-50 border-b border-slate-100 text-slate-500"
-            )}>
-              <th className="px-4 md:px-8 py-3 md:py-4">Date & Time</th>
-              <th className="px-4 md:px-8 py-3 md:py-4">Patient</th>
-              <th className="px-4 md:px-8 py-3 md:py-4">Service</th>
-              <th className="px-4 md:px-8 py-3 md:py-4">Status</th>
-              <th className="px-4 md:px-8 py-3 md:py-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className={cn("divide-y transition-colors", darkMode ? "divide-white/10" : "divide-slate-100")}>
-            {visibleAppointments.map(appt => (
-              <tr key={appt.id} className={cn("group transition-colors", darkMode ? "hover:bg-white/5" : "hover:bg-slate-50/50")}>
-                <td className="px-4 md:px-8 py-4 md:py-5">
-                  <p className={cn("font-bold", darkMode ? "text-white" : "text-slate-900")}>{formatDate(appt.date)}</p>
-                  <p className="text-xs text-slate-500 font-bold">{appt.time}</p>
-                </td>
-                <td className={cn("px-4 md:px-8 py-4 md:py-5 font-bold", darkMode ? "text-white" : "text-slate-900")}>{appt.patientName}</td>
-                <td className="px-4 md:px-8 py-4 md:py-5">
-                  <span className={cn(
-                    "px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap",
-                    darkMode ? "bg-accent-teal/10 text-accent-teal" : "bg-blue-50 text-blue-600"
-                  )}>{appt.serviceType}</span>
-                </td>
-                <td className="px-4 md:px-8 py-4 md:py-5">
-                  <span className={cn(
-                    "px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap",
-                    appt.status === 'Completed'
-                      ? (darkMode ? "bg-green-500/10 text-green-400" : "bg-emerald-50 text-emerald-600")
-                      : appt.status === 'Cancelled'
-                      ? (darkMode ? "bg-orange-500/10 text-orange-400" : "bg-orange-50 text-orange-600")
-                      : (darkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-50 text-blue-600")
-                  )}>{appt.status}</span>
-                </td>
-                <td className="px-4 md:px-8 py-4 md:py-5 text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    {appt.status !== 'Completed' && appt.status !== 'Cancelled' && (
+      {/* View Mode: List or Calendar */}
+      {viewMode === 'list' ? (
+        <div className={cn(
+          "rounded-2xl md:rounded-3xl shadow-xl overflow-hidden border transition-[transform,colors,opacity]",
+          darkMode ? "glass-card border-white/10" : "bg-white border-slate-100 shadow-sm"
+        )}>
+          {visibleAppointments.length === 0 ? (
+            <EmptyState
+              darkMode={darkMode}
+              icon={Calendar}
+              message={
+                appointments.length === 0
+                  ? "There is no data available"
+                  : dateFilter
+                    ? `No appointments scheduled for ${formatDate(dateFilter)}`
+                    : "No appointments match your filter"
+              }
+            />
+          ) : (
+          <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[600px]">
+            <thead>
+              <tr className={cn(
+                "text-xs font-bold uppercase tracking-wider transition-colors",
+                darkMode ? "bg-white/5 text-slate-400" : "bg-slate-50 border-b border-slate-100 text-slate-500"
+              )}>
+                <th className="px-4 md:px-8 py-3 md:py-4">Date & Time</th>
+                <th className="px-4 md:px-8 py-3 md:py-4">Patient</th>
+                <th className="px-4 md:px-8 py-3 md:py-4">Service</th>
+                <th className="px-4 md:px-8 py-3 md:py-4">Status</th>
+                <th className="px-4 md:px-8 py-3 md:py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className={cn("divide-y transition-colors", darkMode ? "divide-white/10" : "divide-slate-100")}>
+              {visibleAppointments.map(appt => (
+                <tr key={appt.id} className={cn("group transition-colors", darkMode ? "hover:bg-white/5" : "hover:bg-slate-50/50")}>
+                  <td className="px-4 md:px-8 py-4 md:py-5">
+                    <p className={cn("font-bold", darkMode ? "text-white" : "text-slate-900")}>{formatDate(appt.date)}</p>
+                    <p className="text-xs text-slate-500 font-bold">{appt.time}</p>
+                  </td>
+                  <td className={cn("px-4 md:px-8 py-4 md:py-5 font-bold", darkMode ? "text-white" : "text-slate-900")}>{appt.patientName}</td>
+                  <td className="px-4 md:px-8 py-4 md:py-5">
+                    <span className={cn(
+                      "px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap",
+                      darkMode ? "bg-accent-teal/10 text-accent-teal" : "bg-blue-50 text-blue-600"
+                    )}>{appt.serviceType}</span>
+                  </td>
+                  <td className="px-4 md:px-8 py-4 md:py-5">
+                    <span className={cn(
+                      "px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap",
+                      appt.status === 'Completed'
+                        ? (darkMode ? "bg-green-500/10 text-green-400" : "bg-emerald-50 text-emerald-600")
+                        : appt.status === 'Cancelled'
+                        ? (darkMode ? "bg-orange-500/10 text-orange-400" : "bg-orange-50 text-orange-600")
+                        : (darkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-50 text-blue-600")
+                    )}>{appt.status}</span>
+                  </td>
+                  <td className="px-4 md:px-8 py-4 md:py-5 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      {appt.status !== 'Completed' && appt.status !== 'Cancelled' && (
+                        <button
+                          onClick={async () => {
+                            try {
+                              await updateDoc(doc(db, 'appointments', appt.id), { status: 'Completed' });
+                            } catch (error) {
+                              alert(handleFirestoreError(error, OperationType.UPDATE, `appointments/${appt.id}`));
+                            }
+                          }}
+                          className={cn(
+                            "p-2 rounded-lg transition-colors",
+                            darkMode ? "hover:bg-green-500/10 text-green-400" : "hover:bg-emerald-50 text-emerald-600"
+                          )}
+                          title="Mark as Completed"
+                        >
+                          <CheckCircle2 size={18} />
+                        </button>
+                      )}
+
+                      {appt.status !== 'Cancelled' && appt.status !== 'Completed' && (
+                        <button
+                          onClick={() => handleCancelAppointment(appt)}
+                          className={cn(
+                            "p-2 rounded-lg transition-colors",
+                            darkMode ? "hover:bg-orange-500/10 text-orange-400" : "hover:bg-orange-50 text-orange-600"
+                          )}
+                          title="Cancel Appointment"
+                        >
+                          <X size={18} />
+                        </button>
+                      )}
+
                       <button
                         onClick={async () => {
+                          if (!confirm('Delete this appointment permanently?')) return;
                           try {
-                            await updateDoc(doc(db, 'appointments', appt.id), { status: 'Completed' });
+                            await deleteDoc(doc(db, 'appointments', appt.id));
                           } catch (error) {
-                            alert(handleFirestoreError(error, OperationType.UPDATE, `appointments/${appt.id}`));
+                            alert(handleFirestoreError(error, OperationType.DELETE, `appointments/${appt.id}`));
                           }
                         }}
                         className={cn(
                           "p-2 rounded-lg transition-colors",
-                          darkMode ? "hover:bg-green-500/10 text-green-400" : "hover:bg-emerald-50 text-emerald-600"
+                          darkMode ? "hover:bg-red-500/10 text-red-400" : "hover:bg-red-50 text-red-600"
                         )}
-                        title="Mark as Completed"
+                        title="Delete Permanently"
                       >
-                        <CheckCircle2 size={18} />
+                        <Trash2 size={18} />
                       </button>
-                    )}
-
-                    {appt.status !== 'Cancelled' && appt.status !== 'Completed' && (
-                      <button
-                        onClick={() => handleCancelAppointment(appt)}
-                        className={cn(
-                          "p-2 rounded-lg transition-colors",
-                          darkMode ? "hover:bg-orange-500/10 text-orange-400" : "hover:bg-orange-50 text-orange-600"
-                        )}
-                        title="Cancel Appointment"
-                      >
-                        <X size={18} />
-                      </button>
-                    )}
-
-                    <button
-                      onClick={async () => {
-                        if (!confirm('Delete this appointment permanently?')) return;
-                        try {
-                          await deleteDoc(doc(db, 'appointments', appt.id));
-                        } catch (error) {
-                          alert(handleFirestoreError(error, OperationType.DELETE, `appointments/${appt.id}`));
-                        }
-                      }}
-                      className={cn(
-                        "p-2 rounded-lg transition-colors",
-                        darkMode ? "hover:bg-red-500/10 text-red-400" : "hover:bg-red-50 text-red-600"
-                      )}
-                      title="Delete Permanently"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+          )}
         </div>
-        )}
-      </div>
+      ) : (
+        /* Calendar View */
+        <CalendarView
+          appointments={visibleAppointments}
+          onSelectAppointment={(appt) => {
+            // Could open a detail modal or show appointment details
+            console.log('Selected appointment:', appt);
+          }}
+          onSelectSlot={(slotInfo) => {
+            // Auto-fill the new appointment form with selected date/time
+            setNewAppt({
+              ...newAppt,
+              date: format(slotInfo.start, 'yyyy-MM-dd'),
+              time: format(slotInfo.start, 'HH:mm')
+            });
+            setShowAdd(true);
+          }}
+          onEventDrop={async ({ appointmentId, newDate, newTime }) => {
+            try {
+              await updateDoc(doc(db, 'appointments', appointmentId), {
+                date: newDate,
+                time: newTime
+              });
+            } catch (error) {
+              alert(handleFirestoreError(error, OperationType.UPDATE, `appointments/${appointmentId}`));
+            }
+          }}
+          darkMode={darkMode}
+        />
+      )}
 
       {showAdd && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
