@@ -92,6 +92,7 @@ import { getExpirationStatus, getExpirationColors, getExpirationBadge } from './
 import { INVENTORY_CATEGORIES, MEDICINE_TYPES, INVENTORY_UNITS } from './constants/inventory';
 import MedicalHistoryManager from './components/MedicalHistoryManager';
 import { CalendarView } from './components/CalendarView';
+import { LandingPage } from './components/LandingPage';
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -523,6 +524,28 @@ const StatCard = ({ label, value, icon: Icon, color, darkMode, glowClass, onClic
 // --- Main App ---
 
 export default function App() {
+  const [showLanding, setShowLanding] = useState(() => {
+    // Check if user has visited before
+    return !sessionStorage.getItem('visited');
+  });
+
+  const [darkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    }
+    return false;
+  });
+
+  const handleGetStarted = () => {
+    sessionStorage.setItem('visited', 'true');
+    setShowLanding(false);
+  };
+
+  if (showLanding) {
+    return <LandingPage onGetStarted={handleGetStarted} darkMode={darkMode} />;
+  }
+
   return (
     <AppContent />
   );
