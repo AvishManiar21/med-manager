@@ -41,7 +41,8 @@ import {
   Mail,
   Printer,
   Inbox,
-  ShieldAlert
+  ShieldAlert,
+  Shield
 } from 'lucide-react';
 import {
   collection,
@@ -84,8 +85,10 @@ import {
   InventoryItem,
   MedicalCondition,
   Allergy,
-  ChronicCondition
+  ChronicCondition,
+  AuditLog
 } from './types';
+import { logAudit } from './utils/auditLog';
 import { cn } from './lib/utils';
 import { formatCurrency, formatDate } from './utils/formatting';
 import { getExpirationStatus, getExpirationColors, getExpirationBadge } from './utils/expiration';
@@ -94,6 +97,7 @@ import MedicalHistoryManager from './components/MedicalHistoryManager';
 import { CalendarView } from './components/CalendarView';
 import { LandingPage } from './components/LandingPage';
 import { PatientPortal } from './components/PatientPortal';
+import { AuditLogViewer } from './components/AuditLogViewer';
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -585,11 +589,12 @@ function AppContent() {
     }
     return false;
   });
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'appointments' | 'analytics' | 'inventory' | 'sheets' | 'profile' | 'prescriptions'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'appointments' | 'analytics' | 'inventory' | 'sheets' | 'profile' | 'prescriptions' | 'admin'>('dashboard');
   const [patients, setPatients] = useState<Patient[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [prescriptions, setPrescriptions] = useState<any[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -665,12 +670,17 @@ function AppContent() {
       setPrescriptions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     }, (error) => handleFirestoreError(error, OperationType.GET, 'prescriptions'));
 
+    const unsubAuditLogs = onSnapshot(query(collection(db, 'auditLogs'), orderBy('timestamp', 'desc')), (snapshot) => {
+      setAuditLogs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as AuditLog)));
+    }, (error) => handleFirestoreError(error, OperationType.GET, 'auditLogs'));
+
     return () => {
       unsubPatients();
       unsubAppointments();
       unsubInventory();
       unsubTransactions();
       unsubPrescriptions();
+      unsubAuditLogs();
     };
   }, [user]);
 
@@ -801,6 +811,7 @@ function AppContent() {
             { icon: ClipboardList, tab: 'prescriptions' as const, label: 'Prescriptions' },
             { icon: Package, tab: 'inventory' as const, label: 'Inventory' },
             { icon: FileText, tab: 'sheets' as const, label: 'Sheets' },
+            { icon: Shield, tab: 'admin' as const, label: 'Admin' },
             { icon: UserCircle, tab: 'profile' as const, label: 'Profile' },
           ].map((item) => (
             <SidebarItem
@@ -1134,6 +1145,7 @@ function AppContent() {
           {activeTab === 'appointments' && <AppointmentsView appointments={reconciledAppointments} patients={patients} darkMode={darkMode} dateFilter={apptDateFilter} onDateFilterChange={setApptDateFilter} />}
           {activeTab === 'prescriptions' && <PrescriptionsView patients={patients} prescriptions={prescriptions} doctorProfile={doctorProfile} user={user} darkMode={darkMode} />}
           {activeTab === 'sheets' && <SheetsView transactions={reconciledTransactions} darkMode={darkMode} />}
+          {activeTab === 'admin' && <AuditLogViewer auditLogs={auditLogs} darkMode={darkMode} />}
           {activeTab === 'profile' && <ProfileView user={user} darkMode={darkMode} />}
         </div>
       </main>

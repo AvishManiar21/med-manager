@@ -157,3 +157,43 @@ export interface PatientUser {
   createdAt: string;
   lastLogin?: string;
 }
+
+export type AuditAction =
+  | 'user.create'
+  | 'user.update'
+  | 'user.delete'
+  | 'user.disable'
+  | 'user.enable'
+  | 'patient.create'
+  | 'patient.update'
+  | 'patient.delete'
+  | 'appointment.create'
+  | 'appointment.update'
+  | 'appointment.delete'
+  | 'appointment.cancel'
+  | 'prescription.create'
+  | 'prescription.delete'
+  | 'inventory.create'
+  | 'inventory.update'
+  | 'inventory.delete'
+  | 'inventory.restock'
+  | 'transaction.create'
+  | 'transaction.delete'
+  | 'database.export'
+  | 'database.wipe'
+  | 'permissions.update';
+
+export interface AuditLog {
+  id: string;
+  action: AuditAction;
+  actorId: string;          // UID of the user who performed the action
+  actorEmail: string;       // Email of the actor
+  actorName: string;        // Display name of the actor
+  targetType?: string;      // Type of entity affected (e.g., 'patient', 'user')
+  targetId?: string;        // ID of the entity affected
+  targetName?: string;      // Name/identifier of the entity
+  details?: string;         // Additional context or changes made
+  metadata?: Record<string, any>;  // Structured data about the change
+  timestamp: string;
+  ipAddress?: string;       // Future enhancement
+}
