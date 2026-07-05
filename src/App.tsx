@@ -86,8 +86,11 @@ import {
   Allergy,
   ChronicCondition
 } from './types';
-import { cn, formatCurrency, formatDate, getExpirationStatus, getExpirationColors, getExpirationBadge } from './lib/utils';
-import { MedicalHistoryManager } from './components/MedicalHistoryManager';
+import { cn } from './lib/utils';
+import { formatCurrency, formatDate } from './utils/formatting';
+import { getExpirationStatus, getExpirationColors, getExpirationBadge } from './utils/expiration';
+import { INVENTORY_CATEGORIES, MEDICINE_TYPES, INVENTORY_UNITS } from './constants/inventory';
+import MedicalHistoryManager from './components/MedicalHistoryManager';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import {
@@ -1563,51 +1566,6 @@ function InventoryView({ inventory, darkMode }: { inventory: InventoryItem[], da
   const [reduceAmount, setReduceAmount] = useState(1);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
-
-  const INVENTORY_CATEGORIES = [
-    "Medicine",
-    "Anesthetics & Sedation",
-    "Diagnostic & Examination",
-    "Restorative & Fillings",
-    "Endodontics (Root Canal)",
-    "Periodontics (Gums)",
-    "Oral Surgery & Extraction",
-    "Prosthodontics (Crowns/Bridges)",
-    "Orthodontics (Braces)",
-    "PPE & Disposables",
-    "Sterilization & Hygiene",
-    "Laboratory Supplies",
-    "Dental Handpieces & Burs",
-    "Preventive Care"
-  ];
-
-  const MEDICINE_TYPES = [
-    "Analgesics (Pain Relief)",
-    "Antibiotics (Infection Control)",
-    "Antifungals",
-    "Antivirals",
-    "Anesthetics (Local/Topical)",
-    "Corticosteroids (Anti-inflammatory)",
-    "Hemostatics (Clotting Agents)",
-    "Sedatives & Anxiolytics",
-    "Fluorides & Preventive Agents",
-    "Therapeutic Mouthrinses",
-    "Desensitizing Agents"
-  ];
-
-  const INVENTORY_UNITS = [
-    "pcs",
-    "box",
-    "bottle",
-    "pack",
-    "tube",
-    "kit",
-    "roll",
-    "ml",
-    "gm",
-    "vial",
-    "set"
-  ];
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();

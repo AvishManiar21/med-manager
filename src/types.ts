@@ -109,8 +109,6 @@ export interface InventoryItem {
   expirationDate?: string;
 }
 
-export type ExpirationStatus = 'expired' | 'expiring-soon' | 'expiring-warning' | 'safe';
-
 export interface Transaction {
   id: string;
   patientId: string;
