@@ -100,6 +100,7 @@ import { LandingPage } from './components/LandingPage';
 import { PatientPortal } from './components/PatientPortal';
 import { AuditLogViewer } from './components/AuditLogViewer';
 import { ImageUpload } from './components/ImageUpload';
+import { AppointmentReminderButton } from './components/AppointmentReminderButton';
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
@@ -2458,6 +2459,7 @@ function AppointmentsView({ appointments, patients, darkMode, dateFilter, onDate
               <span className="hidden sm:inline">Calendar</span>
             </button>
           </div>
+<AppointmentReminderButton darkMode={darkMode} />
 
           <button
             onClick={() => setShowAdd(true)}

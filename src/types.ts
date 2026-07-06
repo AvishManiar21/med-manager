@@ -105,12 +105,15 @@ export interface Appointment {
   id: string;
   patientId: string;
   patientName: string;
+  patientEmail?: string;
   date: string;
   time: string;
   serviceType: ServiceType;
   status: "Scheduled" | "Completed" | "Cancelled";
   cancellationReason?: string;
   cancelledAt?: string;
+  reminderSent?: boolean;
+  reminderSentAt?: string;
 }
 
 export interface InventoryItem {
