@@ -218,3 +218,41 @@ export interface AuditLog {
   timestamp: string;
   ipAddress?: string;       // Future enhancement
 }
+
+// TREATMENT PLANS
+export type TreatmentStatus = 'planned' | 'in-progress' | 'completed' | 'cancelled';
+
+export interface TreatmentVisit {
+  id: string;
+  visitNumber: number;
+  serviceType: ServiceType;
+  description: string;
+  scheduledDate?: string;
+  completedDate?: string;
+  status: 'pending' | 'scheduled' | 'completed' | 'cancelled';
+  cost: number;
+  notes?: string;
+  appointmentId?: string; // Link to actual appointment
+}
+
+export interface TreatmentPlan {
+  id: string;
+  patientId: string;
+  patientName: string;
+  title: string; // e.g., "Complete Dental Restoration"
+  diagnosis: string;
+  description: string;
+  status: TreatmentStatus;
+  totalCost: number;
+  paidAmount: number;
+  visits: TreatmentVisit[];
+  startDate: string;
+  estimatedEndDate?: string;
+  actualEndDate?: string;
+  dentistName: string;
+  dentistId: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
