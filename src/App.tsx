@@ -101,6 +101,7 @@ import { PatientPortal } from './components/PatientPortal';
 import { AuditLogViewer } from './components/AuditLogViewer';
 import { ImageUpload } from './components/ImageUpload';
 import { AppointmentReminderButton } from './components/AppointmentReminderButton';
+import { AdvancedAnalytics } from './components/AdvancedAnalytics';
 import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
